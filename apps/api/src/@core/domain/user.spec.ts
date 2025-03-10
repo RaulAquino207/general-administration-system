@@ -1,44 +1,50 @@
-import { User } from './user';
 import { Group } from './group';
 import { Role } from './role';
+import { User } from './user';
 
 describe('User Entity', () => {
-  const mockRole = new Role('role-1', 'admin', ['manage_users']);
-  const mockParentGroup = new Group('group-1', 'Parent Group');
-  const mockChildGroup = new Group('group-2', 'Child Group', mockParentGroup);
+  let user: User;
 
   beforeEach(() => {
-    mockParentGroup.roles = [mockRole];
+    user = new User('1', 'Monalisa', 'monalisa@email.com', 'password123');
   });
 
-  describe('hasRole()', () => {
-    it('should return true when user has direct role', () => {
-      const user = new User('user-1', 'john', 'john@test.com', [], [mockRole]);
-      expect(user.hasRole('admin')).toBe(true);
-    });
-
-    it('should return true when role comes from group', () => {
-      const user = new User('user-1', 'john', 'john@test.com', [mockParentGroup]);
-      expect(user.hasRole('admin')).toBe(true);
-    });
-
-    it('should return true when role comes from parent group', () => {
-      const user = new User('user-1', 'john', 'john@test.com', [mockChildGroup]);
-      expect(user.hasRole('admin')).toBe(true);
-    });
-
-    it('should return false when no matching roles', () => {
-      const user = new User('user-1', 'john', 'john@test.com');
-      expect(user.hasRole('non_existent')).toBe(false);
-    });
+  it('should create a user with a valid name and email', () => {
+    expect(user.getId()).toBe('1');
+    expect(user.getName()).toBe('Monalisa');
+    expect(user.getEmail()).toBe('monalisa@email.com');
   });
 
-  describe('Groups Management', () => {
-    it('should add multiple groups correctly', () => {
-      const user = new User('user-1', 'john', 'john@test.com');
-      user.groups = [mockParentGroup, mockChildGroup];
-      expect(user.groups).toHaveLength(2);
-      expect(user.groups[0].name).toBe('Parent Group');
-    });
+  it('should change the password correctly', () => {
+    user.changePassword('newpass123');
+    expect(() => user.changePassword('123')).toThrowError('The password must be at least 6 characters long.');
+  });
+
+  it('should add and remove a group correctly', () => {
+    const group = new Group('10', 'Admins');
+    user.addGroup(group);
+    expect(user.getGroups()).toContain(group);
+
+    user.removeGroup(group);
+    expect(user.getGroups()).not.toContain(group);
+  });
+
+  it('should throw an error when removing a non-existent group', () => {
+    const group = new Group('10', 'Admins');
+    expect(() => user.removeGroup(group)).toThrowError('User does not belong to this group.');
+  });
+
+  it('should assign and revoke roles correctly', () => {
+    const role = new Role('100', 'Admin');
+    user.assignRole(role);
+    expect(user.getRoles()).toContain(role);
+
+    user.revokeRole(role);
+    expect(user.getRoles()).not.toContain(role);
+  });
+
+  it('should throw an error when revoking a non-existent role', () => {
+    const role = new Role('100', 'Admin');
+    expect(() => user.revokeRole(role)).toThrowError('User does not have this role.');
   });
 });
