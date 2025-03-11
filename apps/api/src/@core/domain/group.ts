@@ -1,9 +1,9 @@
 export class Group {
-  private readonly id: string;
-  private readonly name: string;
+  private id: string;
+  private name: string;
   private parent?: Group;
-  private readonly children: Set<Group> = new Set();
-  private readonly users: Set<string> = new Set();
+  private children: Set<Group> = new Set();
+  private users: Set<string> = new Set(); // IDs of users belonging to the group
 
   constructor(id: string, name: string, parent?: Group) {
     this.id = id;
@@ -33,7 +33,7 @@ export class Group {
 
   addChild(child: Group): void {
     if (child.getId() === this.id || this.hasAncestor(child)) {
-      throw new Error('Ciclo na hierarquia detectado.');
+      throw new Error('Hierarchy cycle detected.');
     }
     child.parent = this;
     this.children.add(child);
@@ -41,7 +41,7 @@ export class Group {
 
   removeChild(child: Group): void {
     if (!this.children.has(child)) {
-      throw new Error('Este grupo não é um filho deste grupo.');
+      throw new Error('This group is not a child of this group.');
     }
     this.children.delete(child);
     child.parent = undefined;
@@ -53,7 +53,7 @@ export class Group {
 
   removeUser(userId: string): void {
     if (!this.users.has(userId)) {
-      throw new Error('Usuário não pertence a este grupo.');
+      throw new Error('User does not belong to this group.');
     }
     this.users.delete(userId);
   }
