@@ -42,7 +42,7 @@ export class User {
 
   changePassword(newPassword: string): void {
     if (newPassword.length < 6) {
-      throw new Error('A senha deve ter pelo menos 6 caracteres.');
+      throw new Error('The password must be at least 6 characters long.');
     }
     this.password = newPassword;
   }
@@ -53,7 +53,7 @@ export class User {
 
   removeGroup(group: Group): void {
     if (!this.groups.has(group)) {
-      throw new Error('Usuário não pertence a este grupo.');
+      throw new Error('User does not belong to this group.');
     }
     this.groups.delete(group);
   }
@@ -64,9 +64,8 @@ export class User {
 
   revokeRole(role: Role): void {
     if (!this.roles.has(role)) {
-      throw new Error('Usuário não possui esta role.');
+      throw new Error('User does not have this role.');
     }
     this.roles.delete(role);
   }
-
 }
