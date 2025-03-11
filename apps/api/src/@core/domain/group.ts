@@ -1,9 +1,11 @@
+import { User } from './user';
+
 export class Group {
   private id: string;
   private name: string;
   private parent?: Group;
   private children: Set<Group> = new Set();
-  private users: Set<string> = new Set(); // IDs of users belonging to the group
+  private users: Set<User> = new Set();
 
   constructor(id: string, name: string, parent?: Group) {
     this.id = id;
@@ -27,7 +29,7 @@ export class Group {
     return Array.from(this.children);
   }
 
-  getUsers(): string[] {
+  getUsers(): User[] {
     return Array.from(this.users);
   }
 
@@ -47,15 +49,30 @@ export class Group {
     child.parent = undefined;
   }
 
-  addUser(userId: string): void {
-    this.users.add(userId);
+  addUser(user: User, updateUser = true): void {
+    if ([...this.users].some((u) => u.getId() === user.getId())) {
+      return;
+    }
+
+    this.users.add(user);
+
+    if (updateUser) {
+      user.addGroup(this, false);
+    }
   }
 
-  removeUser(userId: string): void {
-    if (!this.users.has(userId)) {
+  removeUser(user: User, updateUser = true): void {
+    const foundUser = [...this.users].find((u) => u.getId() === user.getId());
+
+    if (!foundUser) {
       throw new Error('User does not belong to this group.');
     }
-    this.users.delete(userId);
+
+    this.users.delete(foundUser);
+
+    if (updateUser) {
+      foundUser.removeGroup(this, false);
+    }
   }
 
   private hasAncestor(group: Group): boolean {

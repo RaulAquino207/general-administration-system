@@ -47,15 +47,32 @@ export class User {
     this.password = newPassword;
   }
 
-  addGroup(group: Group): void {
+  addGroup(group: Group, updateGroup = true): void {
+    if ([...this.groups].some((g) => g.getId() === group.getId())) {
+      return;
+    }
+
     this.groups.add(group);
+
+    if (updateGroup) {
+      group.addUser(this, false);
+    }
   }
 
-  removeGroup(group: Group): void {
-    if (!this.groups.has(group)) {
+  removeGroup(group: Group, updateGroup = true): void {
+    const foundGroup = [...this.groups].find(
+      (g) => g.getId() === group.getId()
+    );
+
+    if (!foundGroup) {
       throw new Error('User does not belong to this group.');
     }
-    this.groups.delete(group);
+
+    this.groups.delete(foundGroup);
+
+    if (updateGroup) {
+      foundGroup.removeUser(this, false);
+    }
   }
 
   assignRole(role: Role): void {

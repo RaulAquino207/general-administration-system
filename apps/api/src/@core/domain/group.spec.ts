@@ -1,48 +1,69 @@
 import { Group } from "./group";
+import { User } from "./user";
 
-describe('Group Entity', () => {
-    let parentGroup: Group;
-    let childGroup: Group;
-  
-    beforeEach(() => {
-      parentGroup = new Group('1', 'Parent Group');
-      childGroup = new Group('2', 'Child Group');
-    });
-  
-    it('should create a group correctly', () => {
-      expect(parentGroup.getId()).toBe('1');
-      expect(parentGroup.getName()).toBe('Parent Group');
-    });
-  
-    it('should add and remove subgroups correctly', () => {
-      parentGroup.addChild(childGroup);
-      expect(parentGroup.getChildren()).toContain(childGroup);
-      expect(childGroup.getParent()).toBe(parentGroup);
-  
-      parentGroup.removeChild(childGroup);
-      expect(parentGroup.getChildren()).not.toContain(childGroup);
-      expect(childGroup.getParent()).toBeUndefined();
-    });
-  
-    it('should throw an error when adding a cycle in the hierarchy', () => {
-      parentGroup.addChild(childGroup);
-      expect(() => childGroup.addChild(parentGroup)).toThrowError('Hierarchy cycle detected.');
-    });
-  
-    it('should throw an error when removing a subgroup that does not belong', () => {
-      const otherGroup = new Group('3', 'Other Group');
-      expect(() => parentGroup.removeChild(otherGroup)).toThrowError('This group is not a child of this group.');
-    });
-  
-    it('should add and remove users correctly', () => {
-      parentGroup.addUser('user1');
-      expect(parentGroup.getUsers()).toContain('user1');
-  
-      parentGroup.removeUser('user1');
-      expect(parentGroup.getUsers()).not.toContain('user1');
-    });
-  
-    it('should throw an error when removing a user who does not belong', () => {
-      expect(() => parentGroup.removeUser('user1')).toThrowError('User does not belong to this group.');
-    });
+describe('Group', () => {
+  let group: Group;
+  let user: User;
+
+  beforeEach(() => {
+    group = new Group('1', 'Admin');
+    user = new User('1', 'John Doe', 'john@example.com', 'password123');
   });
+
+  it('should create a group with name and ID', () => {
+    expect(group.getId()).toBe('1');
+    expect(group.getName()).toBe('Admin');
+  });
+
+  it('should add a user to the group and ensure bidirectional consistency', () => {
+    group.addUser(user);
+
+    expect(group.getUsers()).toContain(user);
+    expect(user.getGroups()).toContain(group);
+  });
+
+  it('should remove a user from the group and ensure bidirectional consistency', () => {
+    group.addUser(user);
+    group.removeUser(user);
+
+    expect(group.getUsers()).not.toContain(user);
+    expect(user.getGroups()).not.toContain(group);
+  });
+
+  it('should throw an error when removing a user that is not in the group', () => {
+    expect(() => group.removeUser(user)).toThrowError('User does not belong to this group.');
+  });
+
+  it('should not allow cyclic group hierarchy', () => {
+    const childGroup = new Group('2', 'Sub Admin');
+    
+    group.addChild(childGroup);
+    
+    expect(() => childGroup.addChild(group)).toThrowError('Hierarchy cycle detected.');
+  });
+
+  it('should add a child group', () => {
+    const childGroup = new Group('2', 'Sub Admin');
+    
+    group.addChild(childGroup);
+    
+    expect(group.getChildren()).toContain(childGroup);
+    expect(childGroup.getParent()).toBe(group);
+  });
+
+  it('should remove a child group', () => {
+    const childGroup = new Group('2', 'Sub Admin');
+
+    group.addChild(childGroup);
+    group.removeChild(childGroup);
+
+    expect(group.getChildren()).not.toContain(childGroup);
+    expect(childGroup.getParent()).toBeUndefined();
+  });
+
+  it('should throw an error when removing a non-existent child group', () => {
+    const childGroup = new Group('2', 'Sub Admin');
+
+    expect(() => group.removeChild(childGroup)).toThrowError('This group is not a child of this group.');
+  });
+});
