@@ -1,5 +1,5 @@
 import { Group } from "./group";
-import { User } from "./user";
+import { User } from "../user/user";
 
 describe('Group', () => {
   let group: Group;

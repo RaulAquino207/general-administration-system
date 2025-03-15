@@ -1,9 +1,11 @@
+import { v4 as uuid } from 'uuid';
+
 export class Role {
   private readonly id: string;
   private readonly name: string;
 
-  constructor(id: string, name: string) {
-    this.id = id;
+  constructor(name: string) {
+    this.id = uuid();
     this.name = name;
   }
 

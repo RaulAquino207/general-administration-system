@@ -1,5 +1,5 @@
-import { Group } from './group';
-import { Role } from './role';
+import { Group } from '../group/group';
+import { Role } from '../role/role';
 
 export class User {
   private readonly id: string;
