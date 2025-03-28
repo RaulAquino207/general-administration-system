@@ -1,4 +1,4 @@
-import { Role } from "./role";
+import { Role } from "@api/modules/role/domain/entities/role";
 
 describe('Role Entity', () => {
     it('should create a role correctly', () => {

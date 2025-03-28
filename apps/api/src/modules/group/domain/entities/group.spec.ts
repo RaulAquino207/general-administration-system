@@ -1,5 +1,5 @@
-import { Group } from "./group";
-import { User } from "../user/user";
+import { Group } from "@api/modules/group/domain/entities/group";
+import { User } from "@api/modules/user/domain/entities/user";
 
 describe('Group', () => {
   let group: Group;

@@ -1,6 +1,6 @@
-import { Group } from '../group/group';
-import { Role } from '../role/role';
-import { User } from './user';
+import { Group } from "@api/modules/group/domain/entities/group";
+import { Role } from "@api/modules/role/domain/entities/role";
+import { User } from "@api/modules/user/domain/entities/user";
 
 describe('User', () => {
   let user: User;
@@ -10,7 +10,7 @@ describe('User', () => {
   beforeEach(() => {
     user = new User('1', 'John Doe', 'john@example.com', 'password123');
     group = new Group('1', 'Admin');
-    role = new Role('1', 'Admin Role');
+    role = new Role('Admin Role');
   });
 
   it('should create a user with ID, name, email, and password', () => {

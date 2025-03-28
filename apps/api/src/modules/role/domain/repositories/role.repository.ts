@@ -1,4 +1,4 @@
-import { Role } from "./role";
+import { Role } from "@api/modules/role/domain/entities/role";
 
 export interface RoleRepository {
     create(role: Role): Promise<void>;

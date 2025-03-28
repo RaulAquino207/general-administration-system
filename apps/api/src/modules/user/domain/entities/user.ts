@@ -1,5 +1,5 @@
-import { Group } from '../group/group';
-import { Role } from '../role/role';
+import { Group } from "@api/modules/group/domain/entities/group";
+import { Role } from "@api/modules/role/domain/entities/role";
 
 export class User {
   private readonly id: string;

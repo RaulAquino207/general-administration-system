@@ -1,4 +1,4 @@
-import { User } from '../user/user';
+import { User } from "@api/modules/user/domain/entities/user";
 
 export class Group {
   private id: string;
