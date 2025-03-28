@@ -8,7 +8,10 @@
     "tsBuildInfoFile": "out-tsc/api/tsconfig.app.tsbuildinfo",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "target": "es2021"
+    "target": "es2021",
+    "paths": {
+      "@api/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": [
