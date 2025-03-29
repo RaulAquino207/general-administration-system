@@ -1,6 +1,7 @@
 import { Role } from "@api/modules/role/domain/entities/role";
 
 export interface RoleRepository {
-    create(role: Role): Promise<void>;
-    findAll(): Promise<Role[]>;
+    insert(role: Role): Promise<void>;
+    updateById(id: string, data: Partial<Role>): Promise<Role>;
+    selectAll(): Promise<Role[]>;
 }

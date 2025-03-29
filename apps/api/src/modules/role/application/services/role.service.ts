@@ -4,12 +4,16 @@ import { RoleRepository } from "@api/modules/role/domain/repositories/role.repos
 export class RoleService {
     constructor(private readonly roleRepository: RoleRepository) {}
 
-    async create() {
-        const role = new Role('test');
-        await this.roleRepository.create(role);
+    async create(name: string) {
+        const role = new Role(name);
+        await this.roleRepository.insert(role);
+    }
+
+    async update(id: string, data: Partial<Role>) {
+        await this.roleRepository.updateById(id, data);
     }
 
     async findAll() {
-        await this.roleRepository.findAll();
+        await this.roleRepository.selectAll();
     }
 }
