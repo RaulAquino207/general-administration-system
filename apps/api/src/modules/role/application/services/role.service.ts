@@ -1,5 +1,5 @@
-import { Role } from "@api/modules/role/domain/entities/role";
-import { RoleRepository } from "@api/modules/role/domain/repositories/role.repository";
+import { Role } from "../../domain/entities/role";
+import { RoleRepository } from "../../domain/repositories/role.repository";
 
 export class RoleService {
     constructor(private readonly roleRepository: RoleRepository) {}
