@@ -11,19 +11,19 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
-    .setVersion('1.0')
-    .addTag('cats')
-    .build();
-
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3000;
 
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('doc', app, documentFactory);
+  if (process.env.NODE_ENV === 'development') {
+    const config = new DocumentBuilder()
+    .setTitle('General Administration System')
+    .setVersion('1.0')
+    .build();
+
+    const documentFactory = () => SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('doc', app, documentFactory);
+  }
 
   await app.listen(port);
   Logger.log(
